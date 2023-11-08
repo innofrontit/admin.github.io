@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css"> <!-- Add your CSS file for styling -->
+    <title>University Management Page</title>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+
+            <div class="col-2 p-0">
+                <iframe src="sidebar.html" class="sidebar-frame"></iframe>
+            </div>
+        
+            <!-- Main Content -->
+            <div class="col-10">
+                <!-- Header Card -->
+                <div class="card my-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <h5 class="card-title">University Management</h5>
+                            </div>
+                            <div class="col-4">
+                                <input type="search" class="form-control" placeholder="Search">
+                            </div>
+                            <div class="col-4 text-right">
+                                <button class="btn btn-primary">Add New</button>
+                                <button class="btn btn-primary" id="showAllBtn">Show All</button>
+                                <button class="btn btn-danger" id="deleteAllBtn">Delete All</button>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Body Card with Table -->
+                <div class="card my-4">
+                    <div class="card-body">
+                        <table class="table">
+                        <thead>
+                            <tr>
+                                <th>University Name</th>
+                                <th>اسم الجامعة</th>
+                                <th>Region</th>
+                                <th>المنطقة</th>
+                                <th>City</th>
+                                <th>المدينة</th>
+                                <th>Semester Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="universitiesTbody">
+                            <!-- Data will be dynamically populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal" id="addUniversityModal" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New University</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id = "addNewUniversityForm"> 
+                                    <!-- Language Title -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <h4>Informations in English</h4>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <h4>البيانات باللغة العربية</h4>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Name -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <label for="nameEn">University Name</label>
+                                            <input type="text" class="form-control" id="nameEn" pattern="[A-Za-z\s]+" title="English letters only" required>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <label for="nameAr">اسم الجامعة</label>
+                                            <input type="text" class="form-control text-right" id="nameAr" pattern="[\u0600-\u06FF\s]+" title="Arabic letters only" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Region -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <label for="regionEn">Region</label>
+                                            <input type="text" class="form-control" id="regionEn" pattern="[A-Za-z\s]+" title="English letters only" required>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <label for="regionAr">المنطقة</label>
+                                            <input type="text" class="form-control text-right" id="regionAr" pattern="[\u0600-\u06FF\s]+" title="Arabic letters only" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- City -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <label for="cityEn">City</label>
+                                            <input type="text" class="form-control" id="cityEn" pattern="[A-Za-z\s]+" title="English letters only" required>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <label for="cityAr">المدينة</label>
+                                            <input type="text" class="form-control text-right" id="cityAr" pattern="[\u0600-\u06FF\s]+" title="Arabic letters only" required>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Semester Type -->
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <label for="semesterTypeEn">Semester Type</label>
+                                            <select class="form-control" id="semesterTypeEn">
+                                                <option value="two_semester">Two Semester</option>
+                                                <option value="three_semester">Three Semester</option>
+                                            </select>
+                                        </div>
+                                        <!-- <div class="col-6 text-right">
+                                            <label for="semesterTypeAr">نوع الفصل الدراسي</label>
+                                            <select class="form-control" id="semesterTypeAr">
+                                                <option value="فصلين دراسية">فصلين دراسية</option>
+                                                <option value="ثلاثة فصول دراسية">ثلاثة فصول دراسية</option>
+                                            </select>
+                                        </div> -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-secondary" id="cancelUniversityBtn">Cancel</button>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <button type="button" class="btn btn-success" id="saveUniversityBtn">Save</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>                
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>        
+
+        const token = localStorage.getItem('token');
+       
+        // Function to open the Add New University modal dialog
+        function openAddUniversityModal() {
+            document.getElementById('addNewUniversityForm').reset();
+            document.getElementById('addNewUniversityForm').style.display = 'block';
+            $('#addUniversityModal').modal('show');
+        }
+
+        // Function to close the Add New University modal dialog
+        function closeAddUniversityModal() {
+            $('#addUniversityModal').modal('hide');
+        }
+
+        // Event listener for the "Add New" button to open the modal dialog
+        document.querySelector('.btn-primary').addEventListener('click', openAddUniversityModal);
+
+        document.getElementById('saveUniversityBtn').addEventListener('click', submitForm);
+        document.getElementById('cancelUniversityBtn').addEventListener('click', closeAddUniversityModal);
+
+        // Function to submit the form (your existing submitForm function)
+        function submitForm() {
+            // Fetch form elements
+            const nameEn = document.getElementById('nameEn').value;
+            const nameAr = document.getElementById('nameAr').value;
+            const regionEn = document.getElementById('regionEn').value;
+            const regionAr = document.getElementById('regionAr').value;
+            const cityEn = document.getElementById('cityEn').value;
+            const cityAr = document.getElementById('cityAr').value;
+            const semesterTypeEn = document.getElementById('semesterTypeEn').value;
+
+            // Create the desired JSON structure
+            const data = {
+                name_en: nameEn,
+                name_ar: nameAr,
+                region_en: regionEn,
+                region_ar: regionAr,
+                city_en: cityEn,
+                city_ar: cityAr,
+                semester_type: semesterTypeEn
+            };
+
+            // Make a POST request to FastAPI endpoint
+            fetch('http://127.0.0.1:8000/university', {
+                method: 'POST',
+                headers: {
+                    'authorization': token,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            // Handle response after POST request
+            .then(response => {
+                if (response.status === 200) {  // Check for 200 OK status
+                    return response.json();
+                } else {
+                    throw new Error("Failed to Create University!"); // Throw an error for non-200 responses
+                }
+            })
+            .then(data => {
+                resetAndHideForm();  
+                fetchAllUniversities(); 
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);  // Alert the error message
+            });
+
+            closeAddUniversityModal();
+        }
+
+        // Function to reset and hide the form
+        function resetAndHideForm() {
+            const formElement = document.querySelector('#addNewUniversityForm > div.card-body > form');
+            if (formElement) {
+                formElement.reset();
+            }
+            // Add this line to hide the div after resetting the form
+            document.getElementById('addNewUniversityForm').style.display = 'none';
+        }
+
+        // Submitting the University Form
+        document.getElementById('addNewUniversityForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            submitForm();
+        });
+
+        // Function to check if one hour has passed since the last "Show All" click
+        function canClickShowAll() {
+            const lastClickTimestamp = localStorage.getItem('showAllLastClick');
+            if (!lastClickTimestamp) {
+                return true; // First click, allowed
+            }
+
+            const currentTime = new Date().getTime();
+            const timeDifference = currentTime - parseInt(lastClickTimestamp);
+
+            // Check if one hour (in milliseconds) has passed
+            const oneHourInMilliseconds = 60 * 60 * 1000;
+            if (timeDifference >= oneHourInMilliseconds) {
+                return true; // More than one hour has passed, allowed
+            } else {
+                return false; // Less than one hour has passed, not allowed
+            }
+        }
+
+        /// Function to format time in minutes and seconds
+        function formatTime(ms) {
+            const minutes = Math.floor(ms / 60000);
+            const seconds = ((ms % 60000) / 1000).toFixed(0);
+            return minutes + "m " + (seconds < 10 ? '0' : '') + seconds + "s";
+        }
+
+        // Event listener for the "Show All" button
+        document.getElementById('showAllBtn').addEventListener('click', function() {
+            if (canClickShowAll()) {
+                // Allow the action, fetch and display all universities
+                fetchAllUniversities();
+
+                // Update the timestamp in localStorage
+                localStorage.setItem('showAllLastClick', new Date().getTime());
+            }
+        });
+
+        function fetchAllUniversities() {
+            // Check if the user is allowed to click the "Show All" button
+            if (!canClickShowAll()) {
+                const lastClickTimestamp = localStorage.getItem('showAllLastClick');
+                const currentTime = new Date().getTime();
+                const timeDifference = currentTime - parseInt(lastClickTimestamp);
+
+                const oneHourInMilliseconds = 60 * 60 * 1000;
+                const timeLeft = oneHourInMilliseconds - timeDifference;
+
+                const formattedTimeLeft = formatTime(timeLeft);
+                alert('You need to wait for ' + formattedTimeLeft + ' before clicking "Show All" again.');
+                return; // Exit the function without making the fetch request
+            }
+
+            fetch('http://127.0.0.1:8000/university/', {
+                method: 'GET',
+            })
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.getElementById('universitiesTbody');
+                tbody.innerHTML = ''; // Clear previous rows
+
+                data.forEach(university => {
+                    const tr = document.createElement('tr');
+
+                    // Save the university id as a data attribute on the tr element
+                    tr.setAttribute('data-university-id', university.id);
+                    
+                    // Adjusted keys to match the new JSON structure and access the data property
+                    ['name_en', 'name_ar', 'region_en', 'region_ar', 'city_en', 'city_ar', 'semester_type'].forEach(key => {
+                        const td = document.createElement('td');
+                        
+                        // Map the data to user-friendly names where necessary
+                        if (key === 'semester_type' && university.data[key] === 'two_semester') {
+                            td.textContent = 'Two Semesters';
+                        } else if (key === 'semester_type' && university.data[key] === 'three_semester') {
+                            td.textContent = 'Three Semesters';
+                        } else {
+                            td.textContent = university.data[key];
+                        }
+                        
+                        tr.appendChild(td);
+                    });
+                    
+                    // Add Actions column with Edit and Delete buttons
+                    const actionTd = document.createElement('td');
+
+                    const editBtn = document.createElement('button');
+                    editBtn.className = "btn btn-secondary fixed-btn mr-2";
+                    editBtn.textContent = "Edit";
+                    actionTd.appendChild(editBtn);
+
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = "btn btn-danger fixed-btn";
+                    deleteBtn.textContent = "Delete";
+
+                    deleteBtn.addEventListener('click', function() {
+                        // Confirm deletion
+                        const confirmDelete = window.confirm("Are you sure you want to delete this university?");
+                        if (confirmDelete) {
+                            // Fetch the university id from the tr data attribute
+                            const universityId = tr.getAttribute('data-university-id');
+                            
+                            // Send a DELETE request to the endpoint
+                            fetch(`http://127.0.0.1:8000/university/${universityId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'authorization': token, // Assuming token variable exists in your scope
+                                }
+                            })
+                            .then(response => {
+                                if(response.ok) {
+                                    alert('University deleted successfully.');
+                                    fetchAllUniversities(); // Refresh the university list after successful deletion
+                                } else {
+                                    alert('Failed to delete university.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('An error occurred while deleting the university.');
+                            });
+                        }
+                    });
+
+                    actionTd.appendChild(deleteBtn);
+                    tr.appendChild(actionTd);
+                    tbody.appendChild(tr);
+                });
+            })
+            .catch(error => {
+                console.error('Fetch Error:', error);
+            });
+        }
+
+        // When the Show All button is clicked, fetch and display all universities.
+        document.getElementById('showAllBtn').addEventListener('click', function() {
+            fetchAllUniversities();
+        });
+
+        // When the Delete All button is clicked, confirm deletion and then delete all universities.
+        document.getElementById('deleteAllBtn').addEventListener('click', function() {
+            const confirmDelete = window.confirm("Are you sure you want to delete all universities?");
+            if (confirmDelete) {
+                deleteAllUniversities();
+            }
+        });
+
+        function deleteAllUniversities() {
+            // First, fetch all universities to get their IDs
+            fetch('http://127.0.0.1:8000/university/', {
+                method: 'GET',
+                headers: {
+                    'authorization': token, // Assuming token variable exists in your scope
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Create an array of fetch promises for the DELETE requests
+                const deletePromises = data.map(university => {
+                    return fetch(`http://127.0.0.1:8000/university/${university.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'authorization': token,
+                        }
+                    });
+                });
+
+                // Use Promise.all to wait for all DELETE requests to complete
+                return Promise.all(deletePromises);
+            })
+            .then(results => {
+                // Check if all DELETE requests were successful
+                if (results.every(response => response.ok)) {
+                    alert('All universities deleted successfully.');
+                    fetchAllUniversities(); // Refresh the university list after successful deletion
+                } else {
+                    alert('Failed to delete some universities.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while deleting all universities.');
+            });
+        }
+
+        // Attach event listener to the "Cancel" button
+        document.querySelector('.btn-secondary').addEventListener('click', resetAndHideForm);
+    </script>
+</body>
+</html>

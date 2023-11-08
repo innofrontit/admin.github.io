@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login Page</title>
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+
+        .login-page {
+            width: 800px;
+            height: 1280px;
+            padding: 8% 0 0;
+            margin: auto;
+        }
+
+        .form {
+            position: relative;
+            z-index: 1;
+            background: #FFFFFF;
+            max-width: 400px;
+            max-height: 800px;
+            margin: 0 auto 100px;
+            padding: 45px;
+            text-align: center;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        }
+
+        .form input {
+            font-family: "Roboto", sans-serif;
+            outline: 0;
+            background: #f2f2f2;
+            width: 100%;
+            border: 0;
+            margin: 0 0 15px;
+            padding: 15px;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        .form button {
+            font-family: "Roboto", sans-serif;
+            text-transform: uppercase;
+            outline: 0;
+            background: #B1863B;
+            width: 100%;
+            border: 0;
+            padding: 15px;
+            color: #FFFFFF;
+            font-size: 14px;
+            -webkit-transition: all 0.3 ease;
+            transition: all 0.3 ease;
+            cursor: pointer;
+        }
+
+        .form button:hover, .form button:active, .form button:focus {
+            background: #0C4EA0;
+        }
+
+        .form .message {
+            margin: 15px 0 0;
+            color: #b3b3b3;
+            font-size: 12px;
+        }
+
+        .form .message a {
+            color: #B1863B;
+            text-decoration: none;
+        }
+
+        .form .register-form {
+            display: none;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .container:before, .container:after {
+            content: "";
+            display: block;
+            clear: both;
+        }
+
+        .container .info {
+            margin: 50px auto;
+            text-align: center;
+        }
+
+        .container .info h1 {
+            margin: 0 0 15px;
+            padding: 0;
+            font-size: 36px;
+            font-weight: 300;
+            color: #1a1a1a;
+        }
+
+        .container .info span {
+            color: #4d4d4d;
+            font-size: 12px;
+        }
+
+        .container .info span a {
+            color: #000000;
+            text-decoration: none;
+        }
+
+        .container .info span .fa {
+            color: #EF3B3A;
+        }
+
+        body {
+            background: #0C4EA0;
+            font-family: "Roboto", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-page">
+        <div class="form">
+            <form class="login-form" id="login-form">
+                <input type="text" id = "email" placeholder="Email"/>
+                <input type="password" id = "password" placeholder="Password"/>
+                <button>login</button>
+                <p class="message">Forget Your Password? <a id="forgot-password-link" href="#">Click Here</a></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript for your backend logic -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+
+            $('#forgot-password-link').click(function(e) {
+                e.preventDefault();
+
+                const userEmail = prompt("Please enter your email address:");
+
+                if (userEmail !== null && userEmail !== "") {
+                    const data = {
+                        email: userEmail,
+                    };
+
+                    // Make a POST request to your FastAPI endpoint
+                    fetch('http://127.0.0.1:8000/auth/reset_password/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    })
+                    .then(response => {
+                        if (response.status === 200) {
+                            return response.json();
+                        } else {
+                            throw new Error("Password Reset Failed!"); // Throw an error for non-200 responses
+                        }
+                    })
+                    .then(data => {
+                        // Check if the response contains a message
+                        if (data.message) {
+                            alert(data.message); // Show the message to the user
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert(error.message);
+                    });
+                }
+            });
+
+        $('#login-form').submit(function(e) {
+            e.preventDefault();
+            const email = $('#email').val();
+            const password = $('#password').val();
+
+            // Create the data to send to the FastAPI endpoint
+            const data = {
+                email: email,
+                password: password
+            };
+
+            // Make a POST request to your FastAPI endpoint
+            fetch('http://127.0.0.1:8000/auth/login/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (response.status === 200) {
+                    return response.json();
+                } else {
+                    throw new Error("Login Failed!"); // Throw an error for non-200 responses
+                }
+            })
+            .then(data => {
+                const token = data.token;
+                if (token) {
+                    localStorage.setItem('token', token);
+                }
+
+                // Reset the input fields
+                $('#email').val('');
+                $('#password').val('');
+
+                // Redirect to another page
+                window.location.href = 'http://127.0.0.1:5500/rokam-panel/pages/university-management.html';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert(error.message);
+            });
+        });
+});
+
+    </script>
+</body>
+</html>
